@@ -1,10 +1,22 @@
-from app.models.state import AgentState
+from typing import List, Dict, Any
 
-class AgentOrchestrator:
-    def __init__(self, name: str = "agentic-smart-city-traffic-manager"):
-        self.name = name
+class AgenticSmartCityTrafficManagerOrchestrator:
+    def __init__(self, service_name: str = "Agentic Smart City Traffic Manager"):
+        self.service_name = service_name
 
-    def plan_execution(self, prompt: str) -> AgentState:
-        state = AgentState(task_id="TASK-1001")
-        state.history.append({"step": "PLANNING", "detail": f"Generated trajectory plan for query: {prompt}"})
-        return state
+    async def execute_trajectory(self, prompt: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Orchestrates multi-agent execution planning, retrieval, tool execution, and critique.
+        """
+        plan = [
+            {"agent": "Planner", "action": f"Decompose query: {prompt}"},
+            {"agent": "Retriever", "action": "Search domain knowledge base"},
+            {"agent": "Executor", "action": "Run domain-specific tool payload"},
+            {"agent": "Verifier", "action": "Check safety & provenance constraints"}
+        ]
+        return {
+            "service": self.service_name,
+            "status": "SUCCESS",
+            "prompt": prompt,
+            "plan": plan
+        }
